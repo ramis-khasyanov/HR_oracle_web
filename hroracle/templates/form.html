@@ -4,11 +4,21 @@
     {{ form.hidden_tag() }}
     {{ form.e_name.label }} {{form.e_name}}
     <br>
+    {{ form.e_birth_date.label}} {{form.e_birth_date}}
+    <br>
     {{ form.e_recomended.label}} {{form.e_recomended}}
     <br>
     {{form.e_position.label}}{{form.e_position}}
     <br>
+    {{form.e_recruiter.label}}{{form.e_recruiter}}
+    <br>
+    {{form.e_days_to_hire.label}}{{form.e_days_to_hire}}
+    <br>
     {{form.e_commute.label}}{{form.e_commute}}
-   <br>
+    <br>
+    {{form.e_entrance_type}}
+    <br>
+    {{form.e_source.label}}{{form.e_source}}
+    <br>
     {{ form.submit() }}
 </form>
