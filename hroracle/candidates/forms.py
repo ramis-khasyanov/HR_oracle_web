@@ -1,43 +1,15 @@
-from flask import request, Blueprint, Flask, render_template, session, redirect, url_for, session
+import os
+import psycopg2
+
+from sqlalchemy import create_engine
 from flask_wtf import FlaskForm
+from wtforms.validators import DataRequired
 from wtforms import (StringField, BooleanField, DateField,
                      RadioField,SelectField,TextField, FloatField,
                      TextAreaField,SubmitField)
-                     
-import os
-import psycopg2
-from sqlalchemy import create_engine
-from wtforms.validators import DataRequired
 
-core = Blueprint("core",__name__)
+class CandidateForm(FlaskForm):
 
-candidate = {
-    "e_name": "No name provided",
-    "e_age": 20,
-    "e_gender": 0,
-    "e_commute": 20,
-    "e_recomended": 0,
-    "e_position": "DC employee",
-    "e_days_to_hire": 15,
-    "e_entrance_type": 0,
-    "e_source": "hh.ru",
-    "e_recruiter": "Yuliya Almazova"
-}
- 
-
-class InfoForm(FlaskForm):
-    '''
-        Position ENG +
-        Start date +
-        Дата рождения +
-        Пол +
-        Кто нашел +
-        Источник кандидата +
-        Дней от первого контакта до найма +
-        Рекомендован ли +
-        Рекрутер
-        км до работы
-    '''
     list_sources = [
         ("e_source_hh",  "hh.ru"), 
         ("e_source_superjob",  "superjob.ru"),
@@ -78,12 +50,3 @@ class InfoForm(FlaskForm):
     e_source = SelectField('Источник', choices = list_sources, validators=[DataRequired()])
     e_recruiter = SelectField('Рекрутер', choices = list_recruiters, validators=[DataRequired()])
     submit = SubmitField('Готово')
-
-
-@core.route('/', methods=['GET', 'POST'])
-def form():
-    form = InfoForm()
-    
-    if form.validate_on_submit():
-        print(form.e_position.data)
-    return render_template('form.html', form=form, candidate=candidate)
