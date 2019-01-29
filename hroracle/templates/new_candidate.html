@@ -1,4 +1,6 @@
-<h1>Welcome to HRoracle</h1>
+{% extends "base.html" %}
+{% block content %}
+<h1>Новый кандидат</h1>
 <form  method="POST">
     {# This hidden_tag is a CSRF security feature. #}
     {{ form.hidden_tag() }}
@@ -24,3 +26,5 @@
     <br>
     {{ form.submit() }}
 </form>
+
+{% endblock %}

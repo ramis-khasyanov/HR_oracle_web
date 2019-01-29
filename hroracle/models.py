@@ -35,7 +35,7 @@ class Candidate_predictions(db.Model):
     p_id = db.Column(db.Integer, primary_key=True)
     p_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     e_recruiter = db.Column(db.String(255))
-    e_id = db.COlumn(db.Integer, db.ForeignKey("candidates.e_id"), nullable=False)
+    e_id = db.Column(db.Integer, db.ForeignKey("candidates.e_id"), nullable=False)
     e_age = db.Column(db.Integer)
     e_gender = db.Column(db.Integer)
     e_position_eng = db.Column(db.String(255))
