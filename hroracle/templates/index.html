@@ -8,8 +8,8 @@
   <div class="container">
       <div class="card" >
           <div class="card-body">
-                <p>{{candidate.e_name }}</p>
-                <p>Опубликовано: {{ candidate.e_date_entered.strftime('%Y-%m-%d') }}</p>
+                <p><a href="{{ url_for('candidates.candidate_prediction', e_id=candidate.e_id) }}">{{candidate.e_name }}</a></p>
+                <p>Добавлен: {{ candidate.e_date_entered.strftime('%d.%m.%Y') }}</p>
           </div>
       </div>
   </div>

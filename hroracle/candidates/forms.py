@@ -48,6 +48,6 @@ class CandidateForm(FlaskForm):
     e_salary_base = StringField("Фиксированный оклад", validators=[DataRequired()], default=10500)
     e_days_to_hire = StringField('Дней прошло после с первого контакта', validators=[DataRequired()], default=35)
     e_entrance_type = StringField('Кто нашел', validators=[DataRequired()], default=1)
-    e_source = StringField('Источник', validators=[DataRequired()], default="hh.ru")
+    e_source = StringField('Источник', validators=[DataRequired()], default="headhunter")
     e_recruiter = StringField('Рекрутер', validators=[DataRequired()], default="Yuliya Almazova")
     submit = SubmitField('Готово')
