@@ -4,5 +4,17 @@
     <h1>HR Oracle</h1>
     <p>Добро пожаловать в HR Оракул</p>
   </div>
-
+  {% for candidate in candidates.items %}
+  <div class="container">
+      <div class="card" >
+          <div class="card-body">
+                <p>{{candidate.e_name }}</p>
+                <p>Опубликовано: {{ candidate.e_date_entered.strftime('%Y-%m-%d') }}</p>
+          </div>
+      </div>
+  </div>
+  {% endfor %}
+  
+      
+    
 {% endblock %}

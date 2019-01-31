@@ -5,23 +5,28 @@ class Candidate(db.Model):
     
     __tablename__ = "candidates"
     
-    e_id = db.Column(db.Integer, primary_key=True)
+    e_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     e_name = db.Column(db.String(255))
     e_age = db.Column(db.Integer)
+    e_gender = db.Column(db.Integer)
     e_recomended  = db.Column(db.Integer)
-    e_position = db.Column(db.String(255))
+    e_position_eng = db.Column(db.String(255))
+    e_salary_base = db.Column(db.Integer)
     e_recruiter = db.Column(db.String(255))
     e_days_to_hire = db.Column(db.Integer)
     e_commute = db.Column(db.Float)
     e_entrance_type = db.Column(db.Integer)
     e_source = db.Column(db.String(255))
-    predictions = db.relationship("Candidate_predictions", "candidate", lazy=True)
+    e_date_entered = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    predictions = db.relationship("Candidate_predictions", backref="Candidate", lazy=True)
     
-    def __init__(self, e_name, e_age, e_recomended, e_position, e_recruiter, e_days_to_hire, e_commute, e_entrance_type, e_source):
+    def __init__(self, e_name, e_age, e_gender, e_recomended, e_position_eng, e_salary_base, e_recruiter, e_days_to_hire, e_commute, e_entrance_type, e_source):
         self.e_name = e_name
         self.e_age = e_age
+        self.e_gender = e_gender
         self.e_recomended = e_recomended
-        self.e_position = e_position
+        self.e_position_eng = e_position_eng
+        self.e_salary_base = e_salary_base
         self.e_recruiter = e_recruiter
         self.e_days_to_hire = e_days_to_hire
         self.e_commute = e_commute
@@ -32,6 +37,8 @@ class Candidate(db.Model):
         return "Candidate {e_name}".format(e_name=self.e_name)
     
 class Candidate_predictions(db.Model):
+    candidates = db.relationship(Candidate)
+    
     p_id = db.Column(db.Integer, primary_key=True)
     p_date = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     e_recruiter = db.Column(db.String(255))
