@@ -7,7 +7,7 @@
   </div>
   
   
-  <div class="row">
+  <div class="row mx-auto">
   {% for shift in ["Shift 1", "Shift 2", "Shift 3", "Shift 4", "Other"] %}
     <div class="col-2">
     <h3> {{shift}} </h3>
@@ -15,7 +15,9 @@
       
       
       {% if prediction["department"] == shift %}
-        <p><strong>{{prediction["unit"]}}</strong> {{prediction["probability"]}}</p>
+
+        <p><strong>{{prediction["unit"]}}</strong> {{prediction["probability"]}}</p> 
+
       {% endif %}
       
     

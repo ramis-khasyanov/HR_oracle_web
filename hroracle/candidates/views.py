@@ -71,9 +71,11 @@ def candidate_prediction(e_id):
     best_score = 0
     candidate_predictions = []
     for prediction in candidate_predictions_query:
+        if "New_Return" in prediction.e_unit_name: continue
         pred_dict = {}
         pred_dict["e_unit_name"] = prediction.e_unit_name
         if "Shift" in prediction.e_unit_name:
+            
             pred_dict["department"] = prediction.e_unit_name[0:7].replace("_", " ")
             pred_dict["unit"] = prediction.e_unit_name[8:].replace("_", " ")
         else:
@@ -82,5 +84,14 @@ def candidate_prediction(e_id):
         pred_dict["probability"] = prediction.p_success_probability
         if prediction.p_success_probability > best_score:
             best_score = prediction.p_success_probability
+        
         candidate_predictions.append(pred_dict)
+    
+    for prediction in candidate_predictions:
+        if prediction["probability"] == best_score: 
+            prediction["best_score"] = True
+        else:
+            prediction["best_score"] = False
+        prediction["probability"] = str(round(prediction["probability"]*100)) + "%"
+
     return render_template('candidate_predictions.html', candidate=candidate, candidate_predictions=candidate_predictions, best_score=best_score)
