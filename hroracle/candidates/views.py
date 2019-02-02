@@ -4,6 +4,9 @@ from hroracle.models import Candidate, Candidate_predictions
 from hroracle.candidates.forms import CandidateForm
 import requests
 import json
+import joblib
+import datetime
+import pandas as pd
 
 candidates = Blueprint('candidates',__name__)
 
@@ -24,7 +27,8 @@ def new_candidate():
             "e_days_to_hire": form.e_days_to_hire.data,
             "e_recomended": form.e_recomended.data,
             "e_commute": form.e_commute.data,
-            "e_recruiter": form.e_recruiter.data
+            "e_recruiter": form.e_recruiter.data,
+            "e_date_entered": str(datetime.datetime.now())
         }
         
         candidate = Candidate(
@@ -42,11 +46,19 @@ def new_candidate():
                 e_recruiter = candidate_features["e_recruiter"]
             )
         
+        
+        json_obj = json.dumps(candidate_features)
+        response = requests.post('https://hroraclemachine.herokuapp.com/predict', json=json_obj)
+        data = json.loads(response.content)
+        pred_df = pd.read_json(data, orient="split")
+        
         db.session.add(candidate)
         db.session.commit()
-        json_obj = json.dumps(candidate_features)
-        #response = requests.post('https://hroraclemachine.herokuapp.com/predict', json=json_obj)
+        
+        pred_df.to_sql(name='candidate_predictions', con=db.engine, if_exists = 'append', index=False)
         return redirect(url_for('candidates.candidate_prediction', e_id=candidate.e_id))
+
+
     return render_template('new_candidate.html', form=form)
     
    
@@ -54,4 +66,21 @@ def new_candidate():
 def candidate_prediction(e_id):
     #candidate_prediction = Candidate_predictions.query.get_or_404(e_id)
     candidate = Candidate.query.get(e_id)
-    return render_template('candidate_predictions.html', candidate=candidate)
+    candidate_predictions_query = Candidate_predictions.query.filter_by(e_id=e_id).all()
+    
+    best_score = 0
+    candidate_predictions = []
+    for prediction in candidate_predictions_query:
+        pred_dict = {}
+        pred_dict["e_unit_name"] = prediction.e_unit_name
+        if "Shift" in prediction.e_unit_name:
+            pred_dict["department"] = prediction.e_unit_name[0:7].replace("_", " ")
+            pred_dict["unit"] = prediction.e_unit_name[8:].replace("_", " ")
+        else:
+            pred_dict["department"] = "Other"
+            pred_dict["unit"] = prediction.e_unit_name.replace("_", " ")
+        pred_dict["probability"] = prediction.p_success_probability
+        if prediction.p_success_probability > best_score:
+            best_score = prediction.p_success_probability
+        candidate_predictions.append(pred_dict)
+    return render_template('candidate_predictions.html', candidate=candidate, candidate_predictions=candidate_predictions, best_score=best_score)
