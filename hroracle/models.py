@@ -122,7 +122,7 @@ class Candidate_predictions(db.Model):
     e_unit_name = db.Column(db.String(255))
     
     
-class Recruiters(db.Model):
+class Recruiter(db.Model):
     
     __tablename__ = "recruiters"
     

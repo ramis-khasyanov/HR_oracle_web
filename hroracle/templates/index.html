@@ -2,18 +2,28 @@
 {% block content %}
   <div class="jumbotron">
     <h1>HR Oracle</h1>
-    <p>Добро пожаловать в HR Оракул</p>
+    <p>Список кандидатов</p>
   </div>
-  {% for candidate in candidates.items %}
-  <div class="container">
-      <div class="card" >
-          <div class="card-body">
-                <p><a href="{{ url_for('candidates.candidate_prediction', e_id=candidate.e_id) }}">{{candidate.e_name }}</a></p>
-                <p>Добавлен: {{ candidate.e_date_entered.strftime('%d.%m.%Y') }}</p>
-          </div>
-      </div>
-  </div>
-  {% endfor %}
+  
+    <table class="table thead-light" style="width:100%">
+      <thead>
+        <tr>
+          <th>Кандидат</th>
+          <th>Дата добавления</th>
+          <th>Рекрутер</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for candidate in candidates.items %}
+        <tr>
+          <td><a href="{{ url_for('candidates.candidate_prediction', e_id=candidate.e_id) }}">{{candidate.e_name }}</a></td>
+          <td>{{ candidate.e_date_entered.strftime('%d.%m.%Y') }}</td>
+          <td>{{ candidate.e_recruiter }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    
   
     <nav aria-label="Page navigation example">
      <ul class="pagination justify-content-center">

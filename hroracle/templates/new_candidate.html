@@ -1,32 +1,103 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Новый кандидат</h1>
-<form  method="POST">
-    {# This hidden_tag is a CSRF security feature. #}
-    {{ form.hidden_tag() }}
-    {{ form.e_name.label }} {{form.e_name}}
-    <br>
-    {{ form.e_age.label}} {{form.e_age}}
-    <br>
-    {{ form.e_gender.label}} {{form.e_gender}}
-    <br>
-    {{form.e_position_eng.label}}{{form.e_position_eng}}
-    <br>
-    {{form.e_salary_base.label}}{{form.e_salary_base}}
-    <br>
-    {{ form.e_recomended.label}} {{form.e_recomended}}
-    <br>
-    {{form.e_recruiter.label}}{{form.e_recruiter}}
-    <br>
-    {{form.e_days_to_hire.label}}{{form.e_days_to_hire}}
-    <br>
-    {{form.e_commute.label}}{{form.e_commute}}
-    <br>
-    {{form.e_entrance_type.label}}{{form.e_entrance_type}}
-    <br>
-    {{form.e_source.label}}{{form.e_source}}
-    <br>
-    {{ form.submit() }}
-</form>
+
+    <div class="container py-3">
+    <div class="row"> 
+    <div class="mx-auto col-md-8">  
+    <div class="card">
+    <div class="card-header">
+        <h4 class="mb-0">Новый кандидат</h4>
+    </div>
+    <div class="card-body">
+      <div class="col-md-12">
+      <form  method="POST" class="form" role="form" autocomplete="off">
+            {# This hidden_tag is a CSRF security feature. #}
+            {{ form.hidden_tag() }}
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label form-control-label">{{ form.e_name.label }}</label>
+              <div class="col-md-8"> {{ form.e_name(class_="form-control") }} </div>
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label form-control-label">{{ form.e_age.label}}</label>
+              <div class="col-md-8"> {{form.e_age(class_="form-control")}} </div>
+            </div>
+            <div class="form-group row">            
+              <label class="col-md-4 col-form-label form-control-label">{{form.e_commute.label}}</label>
+              <div class="col-md-8"> {{form.e_commute(class_="form-control")}} </div>
+            </div>
+            
+            <fieldset class="form-group">
+              <div class="row">
+                <legend class="col-form-label col-md-4">{{form.e_gender.label}}</legend>
+                <div class="col-md-8">
+                
+                {% for subfield in form.e_gender %}
+                <div class="form-check">
+                  {{ subfield(class_="form-check-input")}}
+                  <label class="form-check-label">
+                    {{ subfield.label }}
+                  </label>
+                </div>
+                {% endfor %}
+                </div>
+              </div>  
+            </fieldset>
+
+            <div class="form-group row">            
+              <label class="col-md-4 col-form-label form-control-label">{{form.e_position_eng.label}}</label>
+              <div class="col-md-8"> {{form.e_position_eng(class_="form-control")}} </div> 
+            </div>
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label form-control-label">{{form.e_days_to_hire.label}}</label>
+              <div class="col-md-8"> {{form.e_days_to_hire(class_="form-control")}} </div> 
+            </div>
+            <div class="form-group row">            
+              <label class="col-md-4 col-form-label form-control-label">{{form.e_recruiter.label}}</label>
+              <div class="col-md-8"> {{form.e_recruiter(class_="form-control")}} </div> 
+            </div>
+            
+            <fieldset class="form-group">
+              <div class="row">
+                <legend class="col-form-label col-md-4">{{form.e_entrance_type.label}}</legend>
+                <div class="col-md-8">
+                
+                {% for subfield in form.e_entrance_type %}
+                <div class="form-check">
+                  {{ subfield(class_="form-check-input")}}
+                  <label class="form-check-label">
+                    {{ subfield.label }}
+                  </label>
+                </div>
+                {% endfor %}
+                </div>
+              </div>  
+            </fieldset>
+            
+            <div class="form-group row">
+              <label class="col-md-4 col-form-label form-control-label">{{form.e_source.label}}</label>
+              <div class="col-md-8"> {{form.e_source(class_="form-control")}} </div>
+            </div>
+            <div class="form-group row"> 
+              <div class="col-md-12">
+                <div class="form-check"> 
+                  {{form.e_recomended(class_="form-check-input")}} 
+                  <label class="form-check-label">
+                    {{form.e_recomended.label}} 
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group row"> 
+              <div class="col-md-12">
+                {{ form.submit(class_="btn btn-primary") }}
+              </div>
+            </div>
+      </form>
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
+    </div>
 
 {% endblock %}

@@ -12,7 +12,7 @@ core = Blueprint("core",__name__)
 @core.route('/')
 def index():
     page = request.args.get('page', 1, type=int)
-    candidates = Candidate.query.order_by(Candidate.e_date_entered.desc()).paginate(page=page, per_page=5)
+    candidates = Candidate.query.order_by(Candidate.e_date_entered.desc()).paginate(page=page, per_page=10)
     return render_template('index.html', candidates=candidates)
 
     

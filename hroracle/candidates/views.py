@@ -19,17 +19,26 @@ def new_candidate():
             "e_id": db.session.query(Candidate).count() + 1,
             "e_name": form.e_name.data,
             "e_position_eng": form.e_position_eng.data,
-            "e_salary_base": form.e_salary_base.data,
             "e_age": form.e_age.data,
-            "e_gender": form.e_gender.data,
-            "e_entrance_type": form.e_entrance_type.data,
+            "e_gender": int(form.e_gender.data),
+            "e_entrance_type": int(form.e_entrance_type.data),
             "e_source": form.e_source.data,
             "e_days_to_hire": form.e_days_to_hire.data,
-            "e_recomended": form.e_recomended.data,
+            "e_recomended": int(form.e_recomended.data),
             "e_commute": form.e_commute.data,
             "e_recruiter": form.e_recruiter.data,
             "e_date_entered": str(datetime.datetime.now())
         }
+        
+        if candidate_features["e_position_eng"] == "Leading_DC_employee":
+            candidate_features["e_salary_base"] = 20261
+        elif candidate_features["e_position_eng"] == "Senior_DC_employee":
+            candidate_features["e_salary_base"] = 15650
+        else:
+            candidate_features["e_salary_base"] = 11050
+        
+        
+        
         
         candidate = Candidate(
                 e_id = candidate_features["e_id"],
@@ -46,7 +55,7 @@ def new_candidate():
                 e_recruiter = candidate_features["e_recruiter"]
             )
         
-        
+        print(candidate_features)
         json_obj = json.dumps(candidate_features)
         response = requests.post('https://hroraclemachine.herokuapp.com/predict', json=json_obj)
         data = json.loads(response.content)
@@ -67,7 +76,6 @@ def candidate_prediction(e_id):
     #candidate_prediction = Candidate_predictions.query.get_or_404(e_id)
     candidate = Candidate.query.get(e_id)
     candidate_predictions_query = Candidate_predictions.query.filter_by(e_id=e_id).all()
-    
     best_score = 0
     candidate_predictions = []
     for prediction in candidate_predictions_query:
@@ -81,6 +89,7 @@ def candidate_prediction(e_id):
         else:
             pred_dict["department"] = "Other"
             pred_dict["unit"] = prediction.e_unit_name.replace("_", " ")
+
         pred_dict["probability"] = prediction.p_success_probability
         if prediction.p_success_probability > best_score:
             best_score = prediction.p_success_probability
@@ -93,5 +102,43 @@ def candidate_prediction(e_id):
         else:
             prediction["best_score"] = False
         prediction["probability"] = str(round(prediction["probability"]*100)) + "%"
+
+    
+    processes = [
+        "Unpacking Area",
+        "New Arrivals Area",
+        "Return Area",
+        "Putaway Area M1",
+        "Putaway Area M2",
+        "Picking Area M1",
+        "Picking Area M2",
+        "Packing Area",
+        "Sorting Area",
+        "Loading Area",
+        "B2B Area Cross Docking",
+        "B2B Area Inditex",
+        "Trouble Shooting ControlIN",
+        "Trouble Shooting Trouble"
+        ]
+    candidate_predictions = []    
+    for prediction_process in processes:
+        prediction_row = {}
+        prediction_row["process"] = prediction_process
+        for prediction in candidate_predictions_query:
+            print(prediction.e_unit_name.replace("_", " "))
+            
+            if "Shift" in prediction.e_unit_name:
+                department = prediction.e_unit_name[0:7].replace("_", " ")
+                unit = prediction.e_unit_name[8:].replace("_", " ")
+            else:
+                department = "Shift 1"
+                unit = prediction.e_unit_name.replace("_", " ")
+            print(prediction_process, ":" , department, unit, )
+            if unit == prediction_process:
+                prediction_row[department] = str(round(prediction.p_success_probability * 100)) + "%" 
+            else:
+                continue
+        candidate_predictions.append(prediction_row)
+    print(candidate_predictions)
 
     return render_template('candidate_predictions.html', candidate=candidate, candidate_predictions=candidate_predictions, best_score=best_score)
